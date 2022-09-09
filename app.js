@@ -65,7 +65,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack)
   next(err)
 })
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.status(500)
   res.render('500', {
     pageTitle: 'Error',

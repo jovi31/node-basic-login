@@ -23,7 +23,7 @@ exports.getSignUp = (req, res) => {
   })
 }
 
-exports.postSignIn = async (req, res) => {
+exports.postSignIn = async (req, res, next) => {
   const login = req.body.login
   const password = req.body.password
 
@@ -98,7 +98,7 @@ exports.postSignUp = (req, res, next) => {
     .catch(next)
 }
 
-exports.postLogout = (req, res) => {
+exports.postLogout = (req, res, next) => {
   req.session.destroy(err => {
     if (!err) {
       res.redirect('/signIn')
