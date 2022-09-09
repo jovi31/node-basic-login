@@ -1,0 +1,20 @@
+<%- include('includes/templateStart') %>
+<form action="/updateUser" method="POST" class="default-form" novalidate>
+    <div id="userImage">
+        <button type="button" class="img-edit-button"><span class="material-symbols-outlined">edit</span></button>
+        <img src="<%= user.imgUrl%>">
+        <input type="text" name="imgUrl" value="<%= user.imgUrl%>" class="default-input hide">
+    </div>
+    <label for="nameInput">Name:</label>
+    <input type="text" name="name" id="nameInput" value="<%= user.name%>" class="default-input">
+    <label for="emailInput">E-mail:</label>
+    <input type="email" name="email" id="emailInput" value="<%= user.email%>" class="default-input">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button type="submit" class="btn">Update</button>
+</form>
+<% if (errors.length > 0) {%>
+    <% for (let error of errors) {%>
+        <div class="popup error show"><%= error%></div>
+    <% } %>
+<% } %>
+<%- include('includes/templateEnd') %>

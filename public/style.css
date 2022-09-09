@@ -1,0 +1,229 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto Slab', serif;
+}
+
+*::selection {
+    background-color: darkseagreen;
+}
+
+body {
+    display: grid;
+    margin: 0;
+    min-height: 100vh;
+    grid-template-columns: 500px 1fr;
+    grid-template-rows: 50px 1fr 50px;
+    grid-template-areas:
+        'header nav'
+        'main main'
+        'footer footer';
+}
+
+header {
+    grid-area: header;
+    display: flex;
+    padding: 5px 10px 5px 30px;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: darkgreen;
+}
+
+header > h1 {
+    margin: 0;
+    font-size: 24px;
+    color: white;
+}
+
+nav.main-nav {
+    display: flex;
+    grid-area: nav;
+    background-color: darkgreen;
+}
+
+ul.nav-itens {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    list-style: none;
+}
+
+ul.nav-itens > li {
+    padding: 0px 15px;
+}
+
+ul.nav-itens > li > a {
+    color: white;
+    text-decoration: none;
+}
+
+ul.nav-itens > li > a:hover,
+ul.nav-itens > li > a.active-link {
+    color: darkseagreen;
+    text-decoration: underline;
+}
+
+main {
+    grid-area: main;
+    padding: 50px 50px 10px 50px;
+}
+
+footer {
+    display: flex;
+    grid-area: footer;
+    padding: 5px;
+    padding-left: 20px;
+    background-color: beige;
+    align-items: center;
+}
+
+.ml-auto, ul.ml-auto {
+    margin-left: auto;
+}
+
+footer > span.developed-by {
+    font-size: 0.9em;
+    color: black;
+}
+
+.default-form {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    font-size: 20px;
+}
+
+.default-input {
+    margin-bottom: 10px;
+    padding-left: 10px;
+    height: 40px;
+    border: solid 2px darkseagreen;
+    border-radius: 0;
+    font-size: 1em;
+}
+
+.default-input:focus-visible{
+    outline: none;
+    border: solid 2px darkgreen;
+    border-radius: 0;
+}
+
+.default-form > .btn[type="submit"] {
+    align-self: flex-end;
+}
+
+.btn {
+    border: 2px solid darkgreen;
+    border-radius: 0    ;
+    padding: 10px;
+    background-color: white;
+    color: darkgreen;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.btn:active {
+    background-color: darkgreen;
+    color: white;
+}
+
+.custom-link {
+    color: rgb(60, 60, 255);
+    text-decoration: none;
+}
+
+.custom-link:hover {
+    text-decoration: underline;
+}
+
+form.logout-form > button {
+    border: 0;
+    padding: 0;
+    background-color: inherit;
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+}
+
+#userImage {
+    display: flex;
+    position: relative;
+    margin-bottom: 20px;
+    flex-direction: column;
+    align-items: center;
+}
+
+#userImage > img, #userImage > .img-edit-button {
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    border: solid 1px darkseagreen;
+}
+
+.img-edit-button {
+    z-index: 10;
+    position: absolute;
+    opacity: 0;
+}
+
+.img-edit-button:hover {
+    opacity: 0.5;
+}
+
+.img-edit-button > span {
+    font-size: 3em;
+}
+
+#userImage > input {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
+
+/* ---------- POPUP ---------- */
+.popup {
+    display: inline-block;
+    margin-top: 20px;
+    border: solid 1px black;
+    border-radius: 5px;
+    padding: 5px;
+    max-width: 500px;
+    font-size: 1em;
+    color: black;
+    cursor: pointer;
+    visibility: hidden;
+}
+
+.success {
+    background-color: lightgreen;
+    color: darkgreen;
+    border: solid 1px darkgreen;
+}
+
+.error{
+    background-color: lightcoral;
+    color: red;
+    border: solid 1px red;
+}
+
+.show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+.hide {
+    visibility: hidden;
+}
+
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+}

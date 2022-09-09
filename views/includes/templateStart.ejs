@@ -1,0 +1,26 @@
+<%- include('start') %>
+<header>
+    <h1><%= headerTitle %></h1>
+</header>
+<nav class="main-nav">
+    <ul class="nav-itens">
+        <li><a href="/"><span class="material-symbols-outlined">home</span></a></li>
+        <% if (isLoggedIn) { %>
+            <li><a href="/userProfile">Profile</a></li>
+        <% } %>
+    </ul>
+    <ul class="nav-itens ml-auto">
+        <% if (isLoggedIn) { %>
+            <li>
+                <form class="logout-form" action="/logout" method="post">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit"><span class="material-symbols-outlined">logout</span></button>
+                </form>
+            </li>
+        <% } else { %>
+            <li><a href="/signIn">Sign In</a></li>
+            <li><a href="/signUp">Sign Up</a></li>
+        <% } %>
+    </ul>
+</nav>
+<main>
