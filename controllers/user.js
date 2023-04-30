@@ -15,22 +15,14 @@ export const getUserProfile = (req, res) => {
   })
 }
 
-export const postUpdateUser = async (req, res) => {
+export const postUpdateUser = async (req, res, next) => {
   const user = req.user
 
-  let errors = getErrorMessages(req)
+  const errors = getErrorMessages(req)
 
   if(errors.length > 0) {
-    return res.render('user', {
-      pageTitle: 'User Profile',
-      headerTitle: user.login,
-      user: {
-        name: user.name,
-        email: user.email,
-        imgUrl: user.imgUrl
-      },
-      errors
-    })
+    req.flash('errors', errors)
+    return res.redirect('/userProfile')
   }
 
   try {
@@ -41,7 +33,7 @@ export const postUpdateUser = async (req, res) => {
 
     res.redirect('/userProfile')
   } catch (error) {
-    throw error
+    next(error)
   }
 }
 

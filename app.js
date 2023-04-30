@@ -33,18 +33,19 @@ app.use(session({
 app.use(csrfProtection())
 app.use(flash())
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   const userId = req.session.userId
-  if (userId) {
-    User.findByPk(userId)
-      .then(user => {
-        req.user = user
-        req.isLoggedIn = true
-        next()
-      })
-      .catch(err => next(err))
-  } else {
+
+  if (!userId)
+    return next()
+  
+  try {
+    const user = await User.findByPk(userId)
+    req.user = user
+    req.isLoggedIn = true
     next()
+  } catch (error) {
+    next(error)
   }
 })
 

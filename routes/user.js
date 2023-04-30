@@ -21,13 +21,15 @@ router.post('/updateUser', isAuth,
       .notEmpty().withMessage('E-mail is required').bail()
       .isEmail().withMessage('Invalid e-mail').bail()
       .isLength({ max: 200 })
-      .custom((value, { req }) => {
-        return User.findOne({ where: { email: value, [Op.not]: { id: req.user.id } } })
-          .then(user => {
-            if (user) {
-              return Promise.reject('E-mail already in use')
-            }
-          })
+      .custom(async (value, { req }) => {
+        try {
+          const user = await User.findOne({ where: { email: value, [Op.not]: { id: req.user.id } } })
+          if (user) {
+            return Promise.reject('E-mail already in use')
+          }
+        } catch (error) {
+          return Promise.reject('Error validating email')
+        }
       })
   ], userController.postUpdateUser)
 

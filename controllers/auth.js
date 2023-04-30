@@ -1,3 +1,4 @@
+import { promisify } from 'util'
 import bcrypt from 'bcryptjs'
 
 import User from '../models/User.js'
@@ -27,85 +28,62 @@ export const postSignIn = async (req, res, next) => {
   const login = req.body.login
   const password = req.body.password
 
-  let errors = getErrorMessages(req)
+  const errors = getErrorMessages(req)
 
   if(errors.length > 0) {
-    return res.render('signIn', {
-      pageTitle: 'Sign in',
-      headerTitle: '',
-      errors
-    })
+    req.flash('errors', errors)
+    return res.redirect('/signIn')
   }
 
   try {
     const user = await User.findOne({ where: { login } })
+    const sessionSave = promisify(req.session.save.bind(req.session))
 
-    let success = user &&
-      await bcrypt.compare(password, user.password)
-
-    if (success) {
+    if (user && await bcrypt.compare(password, user.password)) {
       req.session.userId = user.id
-      req.session.save(err => {
-        if (!err) {
-          res.redirect('/')
-        } else {
-          next(err)
-        }
-      })
+      await sessionSave()
+      res.redirect('/')
     } else {
       req.flash('errors', 'Invalid Login or password')
-      req.session.save(err => {
-        if (!err) {
-          res.redirect('/signIn')
-        } else {
-          next(err)
-        }
-      })
+      await sessionSave()
+      res.redirect('/signIn')
     }
   } catch (error) {
-    throw error
+    next(error)
   }
 }
 
-export const postSignUp = (req, res, next) => {
+export const postSignUp = async (req, res, next) => {
   const login = req.body.login
   const password = req.body.password
   const name = req.body.name
   const email = req.body.email
 
-  let errors = getErrorMessages(req)
+  const errors = getErrorMessages(req)
 
   if(errors.length > 0) {
-    return res.render('signUp', {
-      pageTitle: 'Sign up',
-      headerTitle: '',
-      errors
-    })
+    req.flash('errors', errors)
+    return res.redirect('/signUp')
   }
-
-  bcrypt.hash(password, 12)
-    .then(hashedPassword => {
-      return User.create({
-        login,
-        password: hashedPassword,
-        name,
-        email
-      })
-    })
-    .then(() => {
-      res.redirect('/signIn')
-    })
-    .catch(next)
+  
+  try {
+    const hashedPassword = await bcrypt.hash(password, 12)
+    await User.create({ login, password: hashedPassword, name, email })
+    res.redirect('/signIn')
+  } catch (error) {
+    next(error)
+  }
 }
 
-export const postLogout = (req, res, next) => {
-  req.session.destroy(err => {
-    if (!err) {
-      res.redirect('/signIn')
-    } else {
-      next(err)
-    }
-  })
+export const postLogout = async (req, res, next) => {
+  const sessionDestroy = promisify(req.session.destroy.bind(req.session))
+  
+  try {
+    await sessionDestroy()
+    res.redirect('/signIn')
+  } catch (error) {
+    next(error)
+  }
 }
 
 export default {
