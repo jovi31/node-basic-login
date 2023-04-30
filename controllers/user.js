@@ -1,7 +1,6 @@
-const { getErrorMessages } = require('../utils/error')
+import { getErrorMessages } from '../utils/error.js'
 
-
-exports.getUserProfile = (req, res) => {
+export const getUserProfile = (req, res) => {
   const errors = req.flash('errors')
 
   res.render('user', {
@@ -16,7 +15,7 @@ exports.getUserProfile = (req, res) => {
   })
 }
 
-exports.postUpdateUser = async (req, res) => {
+export const postUpdateUser = async (req, res) => {
   const user = req.user
 
   let errors = getErrorMessages(req)
@@ -44,4 +43,8 @@ exports.postUpdateUser = async (req, res) => {
   } catch (error) {
     throw error
   }
+}
+
+export default {
+  getUserProfile, postUpdateUser
 }

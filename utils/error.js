@@ -1,3 +1,3 @@
-const { validationResult } = require('express-validator')
+import { validationResult } from 'express-validator'
 
-exports.getErrorMessages = (req) => validationResult(req).errors.map(err => err.msg)
+export const getErrorMessages = (req) => validationResult(req).errors.map(err => err.msg)

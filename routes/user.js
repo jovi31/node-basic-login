@@ -1,11 +1,12 @@
-const express = require('express')
-const { not } = require('sequelize').Op
-const { body } = require('express-validator/check')
+import express from 'express'
+import { Op } from 'sequelize'
+import validator from 'express-validator'
 
+import User from '../models/User.js'
+import userController from '../controllers/user.js'
+import isAuth from '../middlewares/isAuth.js'
 
-const User = require('../models/User')
-const userController = require('../controllers/user')
-const isAuth = require('../middlewares/isAuth')
+const { body } = validator
 
 const router = express.Router()
 
@@ -21,7 +22,7 @@ router.post('/updateUser', isAuth,
       .isEmail().withMessage('Invalid e-mail').bail()
       .isLength({ max: 200 })
       .custom((value, { req }) => {
-        return User.findOne({ where: { email: value, [not]: { id: req.user.id } } })
+        return User.findOne({ where: { email: value, [Op.not]: { id: req.user.id } } })
           .then(user => {
             if (user) {
               return Promise.reject('E-mail already in use')
@@ -30,4 +31,4 @@ router.post('/updateUser', isAuth,
       })
   ], userController.postUpdateUser)
 
-module.exports = router
+export default router

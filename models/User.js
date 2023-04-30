@@ -1,5 +1,5 @@
-const { DataTypes } = require('sequelize')
-const sequelize = require('../utils/database')
+import { DataTypes } from 'sequelize'
+import sequelize from '../utils/database.js'
 
 const User = sequelize.define('user', {
     id: {
@@ -29,4 +29,4 @@ const User = sequelize.define('user', {
     imgUrl: DataTypes.STRING
 }, { timestamps: false })
 
-module.exports = User
+export default User

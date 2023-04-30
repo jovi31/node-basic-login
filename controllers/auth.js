@@ -1,9 +1,9 @@
-const bcrypt = require('bcryptjs')
+import bcrypt from 'bcryptjs'
 
-const User = require('../models/User')
-const { getErrorMessages } = require('../utils/error')
+import User from '../models/User.js'
+import { getErrorMessages } from '../utils/error.js'
 
-exports.getSignIn = (req, res) => {
+export const getSignIn = (req, res) => {
   const errors = req.flash('errors')
 
   res.render('signIn', {
@@ -13,7 +13,7 @@ exports.getSignIn = (req, res) => {
   })
 }
 
-exports.getSignUp = (req, res) => {
+export const getSignUp = (req, res) => {
   const errors = req.flash('errors')
 
   res.render('signUp', {
@@ -23,7 +23,7 @@ exports.getSignUp = (req, res) => {
   })
 }
 
-exports.postSignIn = async (req, res, next) => {
+export const postSignIn = async (req, res, next) => {
   const login = req.body.login
   const password = req.body.password
 
@@ -67,7 +67,7 @@ exports.postSignIn = async (req, res, next) => {
   }
 }
 
-exports.postSignUp = (req, res, next) => {
+export const postSignUp = (req, res, next) => {
   const login = req.body.login
   const password = req.body.password
   const name = req.body.name
@@ -98,7 +98,7 @@ exports.postSignUp = (req, res, next) => {
     .catch(next)
 }
 
-exports.postLogout = (req, res, next) => {
+export const postLogout = (req, res, next) => {
   req.session.destroy(err => {
     if (!err) {
       res.redirect('/signIn')
@@ -106,4 +106,8 @@ exports.postLogout = (req, res, next) => {
       next(err)
     }
   })
+}
+
+export default {
+  getSignIn, getSignUp, postSignIn, postSignUp, postLogout,
 }

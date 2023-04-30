@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "type": "module",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon",
+    "start": "node app.js --require dotenv/config",
+    "dev": "nodemon app.js --exec \"node --require dotenv/config\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "João Victor Costa Araujo",

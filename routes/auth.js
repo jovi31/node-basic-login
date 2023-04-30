@@ -1,10 +1,11 @@
-const express = require('express')
-const { body } = require('express-validator/check')
+import express from 'express'
+import validator from 'express-validator'
 
-const User = require('../models/User')
-const authController = require('../controllers/auth')
+import User from '../models/User.js'
+import authController from '../controllers/auth.js'
+import isAuth from '../middlewares/isAuth.js'
 
-const isAuth = require('../middlewares/isAuth')
+const { body } = validator
 
 const router = express.Router()
 
@@ -66,4 +67,4 @@ router.post('/signUp',
   authController.postSignUp)
 router.post('/logout', isAuth, authController.postLogout)
 
-module.exports = router
+export default router

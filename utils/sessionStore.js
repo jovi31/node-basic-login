@@ -1,9 +1,11 @@
-const session = require('express-session')
-const SequelizeStore = require('connect-session-sequelize')(session.Store)
-const Sequelize = require('sequelize')
+import Sequelize from 'sequelize'
+import expressSession from 'express-session'
+import connectSessionSequelize from 'connect-session-sequelize'
 
-const User = require('../models/User')
-const sequelize = require('../utils/database')
+import User from '../models/User.js'
+import sequelize from './database.js'
+
+const SequelizeStore = connectSessionSequelize(expressSession.Store)
 
 const Session = sequelize.define('Session', {
   sid: {
@@ -25,8 +27,10 @@ function extendDefaultFields(defaults, session) {
   }
 }
 
-module.exports = new SequelizeStore({
+const sequelizeStore = new SequelizeStore({
   db: sequelize,
   table: 'Session',
   extendDefaultFields
 })
+
+export default sequelizeStore

@@ -1,22 +1,21 @@
-require('dotenv').config();
+import path from 'path'
+import { fileURLToPath } from 'url'
+import express from 'express'
+import bodyParser from 'body-parser'
+import session from 'express-session'
+import flash from 'connect-flash'
+import csrfProtection from 'csurf'
 
-const path = require('path')
+import sequelize from './utils/database.js'
+import sessionStore from './utils/sessionStore.js'
+import homeRoutes from './routes/home.js'
+import authRoutes from './routes/auth.js'
+import userRoutes from './routes/user.js'
+import errorController from './controllers/error.js'
+import User from './models/User.js'
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const session = require('express-session')
-const flash = require('connect-flash')
-const csrfProtection = require('csurf')
-
-const sequelize = require('./utils/database')
-const sessionStore = require('./utils/sessionStore')
-
-const homeRoutes = require('./routes/home')
-const authRoutes = require('./routes/auth')
-const userRoutes = require('./routes/user')
-
-const errorController = require('./controllers/error')
-const User = require('./models/User')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const app = express()
 
