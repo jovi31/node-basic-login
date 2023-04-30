@@ -6,8 +6,8 @@ import session from 'express-session'
 import flash from 'connect-flash'
 import csrfProtection from 'csurf'
 
-import sequelize from './utils/database.js'
-import sessionStore from './utils/sessionStore.js'
+import sequelize from './config/database.js'
+import sessionStore from './config/sessionStore.js'
 import homeRoutes from './routes/home.js'
 import authRoutes from './routes/auth.js'
 import userRoutes from './routes/user.js'
@@ -28,7 +28,7 @@ app.use(session({
   secret: 'my secret',
   resave: false,
   saveUninitialized: false,
-  store: sessionStore
+  store: sessionStore(sequelize)
 }))
 app.use(csrfProtection())
 app.use(flash())
