@@ -69,7 +69,6 @@ app.use((err, req, res) => {
   res.status(500)
   res.render('500', {
     pageTitle: 'Error',
-    headerTitle: '',
     errors: [],
     isLoggedIn: false
   })

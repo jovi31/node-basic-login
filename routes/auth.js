@@ -4,6 +4,7 @@ import validator from 'express-validator'
 import User from '../models/User.js'
 import authController from '../controllers/auth.js'
 import isAuth from '../middlewares/isAuth.js'
+import { noSpaces } from '../utils/validation.js'
 
 const { body } = validator
 
@@ -26,7 +27,7 @@ router.post('/signIn',
 router.post('/signUp',
   [
     body('name')
-      .notEmpty().withMessage('Name is required')
+      .notEmpty().withMessage('Name is required').bail()
       .isLength({ max: 200 }),
     body('email')
       .notEmpty().withMessage('E-mail is required').bail()
@@ -44,7 +45,8 @@ router.post('/signUp',
       }),
     body('login')
       .notEmpty().withMessage('Login is required').bail()
-      .isAlphanumeric().withMessage('Login: only numbers and characters are allowed').bail()
+      .custom(noSpaces).withMessage('No spaces are allowed in the username').bail()
+      .isAlphanumeric().withMessage('Only numbers and characters are allowed').bail()
       .isLength({ max: 50 })
       .custom(async (value) => {
         try {
@@ -58,6 +60,7 @@ router.post('/signUp',
       }),
     body('password')
       .notEmpty().withMessage('Password is required').bail()
+      .custom(noSpaces).withMessage('No spaces are allowed in the password').bail()
       .isAlphanumeric().withMessage('Password: only numbers and characters are allowed').bail()
       .isLength({ min: 10 }).withMessage('Passwords must be at least 10 characters in length'),
     body('confirmPassword')

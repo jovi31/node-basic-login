@@ -5,22 +5,24 @@ import User from '../models/User.js'
 import { getErrorMessages } from '../utils/error.js'
 
 export const getSignIn = (req, res) => {
-  const errors = req.flash('errors')
+  const [errors = {}] = req.flash('errors')
+  const [data = {}] = req.flash('data')
 
   res.render('signIn', {
     pageTitle: 'Sign in',
-    headerTitle: '',
-    errors
+    errors,
+    data,
   })
 }
 
 export const getSignUp = (req, res) => {
-  const errors = req.flash('errors')
+  const [errors = {}] = req.flash('errors')
+  const [data = {}] = req.flash('data')
 
   res.render('signUp', {
     pageTitle: 'Sign up',
-    headerTitle: '',
-    errors
+    errors,
+    data,
   })
 }
 
@@ -30,8 +32,9 @@ export const postSignIn = async (req, res, next) => {
 
   const errors = getErrorMessages(req)
 
-  if(errors.length > 0) {
+  if(Object.keys(errors).length > 0) {
     req.flash('errors', errors)
+    req.flash('data', { login, password: '' })
     return res.redirect('/signIn')
   }
 
@@ -44,7 +47,7 @@ export const postSignIn = async (req, res, next) => {
       await sessionSave()
       res.redirect('/')
     } else {
-      req.flash('errors', 'Invalid Login or password')
+      req.flash('errors', { nonFieldError: 'Invalid Login or password' })
       await sessionSave()
       res.redirect('/signIn')
     }
@@ -61,8 +64,9 @@ export const postSignUp = async (req, res, next) => {
 
   const errors = getErrorMessages(req)
 
-  if(errors.length > 0) {
+  if(Object.keys(errors).length > 0) {
     req.flash('errors', errors)
+    req.flash('data', { login, name, email })
     return res.redirect('/signUp')
   }
   

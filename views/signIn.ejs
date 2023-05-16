@@ -1,18 +1,27 @@
-<%- include('includes/templateStart') %>
-<div class="signIn">
-    <form action="/signIn" method="POST" class="default-form">
-        <label for="loginInput">Login:</label>
-        <input type="text" name="login" id="loginInput" class="default-input">
-        <label for="passwordInput">Password:</label>
-        <input type="password" name="password" id="passwordInput" class="default-input">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <button type="submit" class="btn">Sign in</button>
-    </form>
-    <a class="custom-link" href="/signUp">Create an account.</a>
-</div>
-<% if (errors.length > 0) {%>
+<%- include('includes/start') %>
+<%- include('includes/loginStyle') %>
+
+<main class="form-signin w-100 m-auto">
+  <form action="/signIn" method="POST">
+    <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+    <div class="form-floating">
+      <input type="text" class="form-control first" id="floatingInput" name="login"  placeholder="Username">
+      <label for="floatingInput">Username</label>
+    </div>
+    <div class="form-floating">
+      <input type="password" class="form-control last" id="floatingPassword" name="password" placeholder="Password">
+      <label for="floatingPassword">Password</label>
+    </div>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+  </form>
+  <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="/signUp">Create an account</a>
+
+  <!-- <% if (errors.length > 0) {%>
     <% for (let error of errors) {%>
         <div class="popup error show"><%= error%></div>
     <% } %>
-<% } %>
-<%- include('includes/templateEnd') %>
+<% } %> -->
+</main>
+<%- include('includes/end') %>

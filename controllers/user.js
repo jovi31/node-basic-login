@@ -5,7 +5,6 @@ export const getUserProfile = (req, res) => {
 
   res.render('user', {
     pageTitle: 'User Profile',
-    headerTitle: req.user.login,
     user: {
       name: req.user.name,
       email: req.user.email,
@@ -20,7 +19,7 @@ export const postUpdateUser = async (req, res, next) => {
 
   const errors = getErrorMessages(req)
 
-  if(errors.length > 0) {
+  if(Object.keys(errors).length > 0) {
     req.flash('errors', errors)
     return res.redirect('/userProfile')
   }

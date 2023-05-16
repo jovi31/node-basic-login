@@ -1,24 +1,52 @@
-<%- include('includes/templateStart') %>
-<div class="signUp">
-    <form action="/signUp" method="POST" class="default-form">
-        <label for="nameInput">Name:</label>
-        <input type="text" name="name" id="nameInput" class="default-input">
-        <label for="emailInput">E-mail:</label>
-        <input type="text" name="email" id="emailInput" class="default-input">
-        <label for="loginInput">Login:</label>
-        <input type="text" name="login" id="loginInput" class="default-input">
-        <label for="passwordInput">Password:</label>
-        <input type="password" name="password" id="passwordInput" class="default-input">
-        <label for="confirmPasswordInput">Confirm password:</label>
-        <input type="password" name="confirmPassword" id="confirmPasswordInput" class="default-input">
+<%- include('includes/start') %>
+<%- include('includes/loginStyle') %>
+<main class="form-signup w-100 m-auto">
+    <form action="/signUp" method="POST">
+        <h1 class="h3 mb-3 fw-normal">New Account</h1>
+        <div class="form-floating">
+            <input type="text" class="form-control first <%=('name' in errors) ? 'is-invalid' : ''%>" value="<%=data['name']%>" id="floatingName" name="name"  placeholder="Name" aria-describedby="validationServerNameFeedback">
+            <label for="floatingName">Name</label>
+            <div id="validationServerNameFeedback" class="invalid-feedback">
+                <%=('name' in errors) ? errors['name'].msg : ''%>
+            </div>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control <%=('email' in errors) ? 'is-invalid' : ''%>" value="<%=data['email']%>" id="floatingEmail" name="email"  placeholder="Email" aria-describedby="validationServerEmailFeedback" required>
+            <label for="floatingEmail">E-mail</label>
+            <div id="validationServerEmailFeedback" class="invalid-feedback">
+                <%=('email' in errors) ? errors['email'].msg : ''%>
+            </div>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control <%=('login' in errors) ? 'is-invalid' : ''%>" value="<%=data['login']%>" id="floatingLogin" name="login"  placeholder="Login" aria-describedby="validationServerLoginFeedback" required>
+            <label for="floatingLogin">Username</label>
+            <div id="validationServerLoginFeedback" class="invalid-feedback">
+                <%=('login' in errors) ? errors['login'].msg : ''%>
+            </div>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control <%=('password' in errors) ? 'is-invalid' : ''%>" id="floatingPassword" name="password" placeholder="Password" aria-describedby="validationServerPasswordFeedback" required>
+            <label for="floatingPassword">Password</label>
+            <div id="validationServerPasswordFeedback" class="invalid-feedback">
+                <%=('password' in errors) ? errors['password'].msg : ''%>
+            </div>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control last <%=('confirmPassword' in errors) ? 'is-invalid' : ''%>" id="floatingConfirmPassword" name="confirmPassword" placeholder="Confirm password" aria-describedby="validationServerConfirmPasswordFeedback" required>
+            <label for="floatingConfirmPassword">Confirm password</label>
+            <div id="validationServerPasswordFeedback" class="invalid-feedback">
+                <%=('confirmPassword' in errors) ? errors['confirmPassword'].msg : ''%>
+            </div>
+        </div>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <button type="submit" class="btn">Sign up</button>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign Up</button>
     </form>
-    <a class="custom-link" href="/signIn">Sign in instead.</a>
-</div>
+    <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="/signIn">Sign in instead.</a>
+</main>
+<!--
 <% if (errors.length > 0) {%>
     <% for (let error of errors) {%>
         <div><div class="popup error show"><%= error%></div></div>
     <% } %>
-<% } %>
-<%- include('includes/templateEnd') %>
+<% } %> -->
+<%- include('includes/end') %>
