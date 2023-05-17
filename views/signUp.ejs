@@ -18,13 +18,6 @@
             </div>
         </div>
         <div class="form-floating">
-            <input type="text" class="form-control <%=('login' in errors) ? 'is-invalid' : ''%>" value="<%=data['login']%>" id="floatingLogin" name="login"  placeholder="Login" aria-describedby="validationServerLoginFeedback" required>
-            <label for="floatingLogin">Username</label>
-            <div id="validationServerLoginFeedback" class="invalid-feedback">
-                <%=('login' in errors) ? errors['login'].msg : ''%>
-            </div>
-        </div>
-        <div class="form-floating">
             <input type="password" class="form-control <%=('password' in errors) ? 'is-invalid' : ''%>" id="floatingPassword" name="password" placeholder="Password" aria-describedby="validationServerPasswordFeedback" required>
             <label for="floatingPassword">Password</label>
             <div id="validationServerPasswordFeedback" class="invalid-feedback">
@@ -43,10 +36,4 @@
     </form>
     <a class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="/signIn">Sign in instead.</a>
 </main>
-<!--
-<% if (errors.length > 0) {%>
-    <% for (let error of errors) {%>
-        <div><div class="popup error show"><%= error%></div></div>
-    <% } %>
-<% } %> -->
 <%- include('includes/end') %>

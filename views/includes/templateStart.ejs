@@ -21,11 +21,10 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end">
                 <!-- <li><hr class="dropdown-divider"></li> -->
-                <li><a class="dropdown-item" href="/userProfile">Profile</a></li>
                 <li>
                   <form class="dropdown-item" action="/logout" method="post">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button type="submit">Logout</button>
+                    <button type="submit" class="btn btn-link">Logout</button>
                   </form>
                 </li>
               </ul>

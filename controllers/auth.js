@@ -27,19 +27,19 @@ export const getSignUp = (req, res) => {
 }
 
 export const postSignIn = async (req, res, next) => {
-  const login = req.body.login
+  const email = req.body.login
   const password = req.body.password
 
   const errors = getErrorMessages(req)
 
   if(Object.keys(errors).length > 0) {
     req.flash('errors', errors)
-    req.flash('data', { login, password: '' })
+    req.flash('data', { email, password: '' })
     return res.redirect('/signIn')
   }
 
   try {
-    const user = await User.findOne({ where: { login } })
+    const user = await User.findOne({ where: { email } })
     const sessionSave = promisify(req.session.save.bind(req.session))
 
     if (user && await bcrypt.compare(password, user.password)) {
@@ -57,7 +57,6 @@ export const postSignIn = async (req, res, next) => {
 }
 
 export const postSignUp = async (req, res, next) => {
-  const login = req.body.login
   const password = req.body.password
   const name = req.body.name
   const email = req.body.email
@@ -66,13 +65,13 @@ export const postSignUp = async (req, res, next) => {
 
   if(Object.keys(errors).length > 0) {
     req.flash('errors', errors)
-    req.flash('data', { login, name, email })
+    req.flash('data', { name, email })
     return res.redirect('/signUp')
   }
   
   try {
     const hashedPassword = await bcrypt.hash(password, 12)
-    await User.create({ login, password: hashedPassword, name, email })
+    await User.create({ password: hashedPassword, name, email })
     res.redirect('/signIn')
   } catch (error) {
     next(error)

@@ -10,7 +10,6 @@ import sequelize from './config/database.js'
 import sessionStore from './config/sessionStore.js'
 import homeRoutes from './routes/home.js'
 import authRoutes from './routes/auth.js'
-import userRoutes from './routes/user.js'
 import errorController from './controllers/error.js'
 import User from './models/User.js'
 
@@ -57,7 +56,6 @@ app.use((req, res, next) => {
 
 app.use(homeRoutes)
 app.use(authRoutes)
-app.use(userRoutes)
 
 app.use(errorController)
 
@@ -76,7 +74,7 @@ app.use((err, req, res) => {
 
 sequelize.sync()
   .then(() => {
-    app.listen(process.env.APP_PORT, () => {
-      console.log('Server listen on port ' + process.env.APP_PORT)
+    app.listen(process.env.PORT, () => {
+      console.log('Server listen on port ' + process.env.PORT || 3000)
     })
   })
