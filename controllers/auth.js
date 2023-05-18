@@ -1,109 +1,94 @@
-const bcrypt = require('bcryptjs')
+import { promisify } from 'util'
+import bcrypt from 'bcryptjs'
 
-const User = require('../models/User')
-const { getErrorMessages } = require('../utils/error')
+import User from '../models/User.js'
+import { getErrorMessages } from '../utils/error.js'
 
-exports.getSignIn = (req, res) => {
-  const errors = req.flash('errors')
+export const getSignIn = (req, res) => {
+  const [errors = {}] = req.flash('errors')
+  const [data = {}] = req.flash('data')
 
   res.render('signIn', {
     pageTitle: 'Sign in',
-    headerTitle: '',
-    errors
+    errors,
+    data,
   })
 }
 
-exports.getSignUp = (req, res) => {
-  const errors = req.flash('errors')
+export const getSignUp = (req, res) => {
+  const [errors = {}] = req.flash('errors')
+  const [data = {}] = req.flash('data')
 
   res.render('signUp', {
     pageTitle: 'Sign up',
-    headerTitle: '',
-    errors
+    errors,
+    data,
   })
 }
 
-exports.postSignIn = async (req, res, next) => {
-  const login = req.body.login
+export const postSignIn = async (req, res, next) => {
+  const email = req.body.login
   const password = req.body.password
 
-  let errors = getErrorMessages(req)
+  const errors = getErrorMessages(req)
 
-  if(errors.length > 0) {
-    return res.render('signIn', {
-      pageTitle: 'Sign in',
-      headerTitle: '',
-      errors
-    })
+  if(Object.keys(errors).length > 0) {
+    req.flash('errors', errors)
+    req.flash('data', { email, password: '' })
+    return res.redirect('/signIn')
   }
 
   try {
-    const user = await User.findOne({ where: { login } })
+    const user = await User.findOne({ where: { email } })
+    const sessionSave = promisify(req.session.save.bind(req.session))
 
-    let success = user &&
-      await bcrypt.compare(password, user.password)
-
-    if (success) {
+    if (user && await bcrypt.compare(password, user.password)) {
       req.session.userId = user.id
-      req.session.save(err => {
-        if (!err) {
-          res.redirect('/')
-        } else {
-          next(err)
-        }
-      })
+      await sessionSave()
+      res.redirect('/')
     } else {
-      req.flash('errors', 'Invalid Login or password')
-      req.session.save(err => {
-        if (!err) {
-          res.redirect('/signIn')
-        } else {
-          next(err)
-        }
-      })
+      req.flash('errors', { nonFieldError: 'Invalid Login or password' })
+      await sessionSave()
+      res.redirect('/signIn')
     }
   } catch (error) {
-    throw error
+    next(error)
   }
 }
 
-exports.postSignUp = (req, res, next) => {
-  const login = req.body.login
+export const postSignUp = async (req, res, next) => {
   const password = req.body.password
   const name = req.body.name
   const email = req.body.email
 
-  let errors = getErrorMessages(req)
+  const errors = getErrorMessages(req)
 
-  if(errors.length > 0) {
-    return res.render('signUp', {
-      pageTitle: 'Sign up',
-      headerTitle: '',
-      errors
-    })
+  if(Object.keys(errors).length > 0) {
+    req.flash('errors', errors)
+    req.flash('data', { name, email })
+    return res.redirect('/signUp')
   }
-
-  bcrypt.hash(password, 12)
-    .then(hashedPassword => {
-      return User.create({
-        login,
-        password: hashedPassword,
-        name,
-        email
-      })
-    })
-    .then(() => {
-      res.redirect('/signIn')
-    })
-    .catch(next)
+  
+  try {
+    const hashedPassword = await bcrypt.hash(password, 12)
+    await User.create({ password: hashedPassword, name, email })
+    res.redirect('/signIn')
+  } catch (error) {
+    next(error)
+  }
 }
 
-exports.postLogout = (req, res, next) => {
-  req.session.destroy(err => {
-    if (!err) {
-      res.redirect('/signIn')
-    } else {
-      next(err)
-    }
-  })
+export const postLogout = async (req, res, next) => {
+  const sessionDestroy = promisify(req.session.destroy.bind(req.session))
+  
+  try {
+    await sessionDestroy()
+    res.redirect('/signIn')
+  } catch (error) {
+    next(error)
+  }
+}
+
+export default {
+  getSignIn, getSignUp, postSignIn, postSignUp, postLogout,
 }
