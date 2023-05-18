@@ -1,26 +1,42 @@
 <%- include('start') %>
+<%- include('mainStyle') %>
 <header>
-    <h1><%= headerTitle %></h1>
-</header>
-<nav class="main-nav">
-    <ul class="nav-itens">
-        <li><a href="/"><span class="material-symbols-outlined">home</span></a></li>
-        <% if (isLoggedIn) { %>
-            <li><a href="/userProfile">Profile</a></li>
-        <% } %>
-    </ul>
-    <ul class="nav-itens ml-auto">
-        <% if (isLoggedIn) { %>
-            <li>
-                <form class="logout-form" action="/logout" method="post">
+  <nav class="navbar fixed-top navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Node Login</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <% if (isLoggedIn) { %>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                User
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <!-- <li><hr class="dropdown-divider"></li> -->
+                <li>
+                  <form class="dropdown-item" action="/logout" method="post">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button type="submit"><span class="material-symbols-outlined">logout</span></button>
-                </form>
+                    <button type="submit" class="btn btn-link">Logout</button>
+                  </form>
+                </li>
+              </ul>
             </li>
-        <% } else { %>
-            <li><a href="/signIn">Sign In</a></li>
-            <li><a href="/signUp">Sign Up</a></li>
-        <% } %>
-    </ul>
-</nav>
-<main>
+          <% } else { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/signIn">Sign In</a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+<main class="main flex-shrink-0"><div class="container">

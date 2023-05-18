@@ -1,0 +1,42 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.form-signin,
+.form-signup {
+  max-width: 330px;
+  padding: 15px;
+}
+
+.form-signin .form-floating:focus-within,
+.form-signup .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input:not(.first, .last),
+.form-signup input:not(.first, .last) {
+  border-radius: 0;
+  margin-bottom: -1px;
+}
+
+.form-signin input.first,
+.form-signup input.first {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-bottom: -1px;
+}
+
+.form-signin input.last,
+.form-signup input.last {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  margin-bottom: 10px;
+}

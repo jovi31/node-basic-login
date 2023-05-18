@@ -1,22 +1,20 @@
-require('dotenv').config();
+import path from 'path'
+import { fileURLToPath } from 'url'
+import express from 'express'
+import bodyParser from 'body-parser'
+import session from 'express-session'
+import flash from 'connect-flash'
+import csrfProtection from 'csurf'
 
-const path = require('path')
+import sequelize from './config/database.js'
+import sessionStore from './config/sessionStore.js'
+import homeRoutes from './routes/home.js'
+import authRoutes from './routes/auth.js'
+import errorController from './controllers/error.js'
+import User from './models/User.js'
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const session = require('express-session')
-const flash = require('connect-flash')
-const csrfProtection = require('csurf')
-
-const sequelize = require('./utils/database')
-const sessionStore = require('./utils/sessionStore')
-
-const homeRoutes = require('./routes/home')
-const authRoutes = require('./routes/auth')
-const userRoutes = require('./routes/user')
-
-const errorController = require('./controllers/error')
-const User = require('./models/User')
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const app = express()
 
@@ -29,23 +27,24 @@ app.use(session({
   secret: 'my secret',
   resave: false,
   saveUninitialized: false,
-  store: sessionStore
+  store: sessionStore(sequelize)
 }))
 app.use(csrfProtection())
 app.use(flash())
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   const userId = req.session.userId
-  if (userId) {
-    User.findByPk(userId)
-      .then(user => {
-        req.user = user
-        req.isLoggedIn = true
-        next()
-      })
-      .catch(err => next(err))
-  } else {
+
+  if (!userId)
+    return next()
+  
+  try {
+    const user = await User.findByPk(userId)
+    req.user = user
+    req.isLoggedIn = true
     next()
+  } catch (error) {
+    next(error)
   }
 })
 
@@ -57,7 +56,6 @@ app.use((req, res, next) => {
 
 app.use(homeRoutes)
 app.use(authRoutes)
-app.use(userRoutes)
 
 app.use(errorController)
 
@@ -69,7 +67,6 @@ app.use((err, req, res) => {
   res.status(500)
   res.render('500', {
     pageTitle: 'Error',
-    headerTitle: '',
     errors: [],
     isLoggedIn: false
   })
@@ -77,7 +74,7 @@ app.use((err, req, res) => {
 
 sequelize.sync()
   .then(() => {
-    app.listen(process.env.APP_PORT, () => {
-      console.log('Server listen on port ' + process.env.APP_PORT)
+    app.listen(process.env.PORT, () => {
+      console.log('Server listen on port ' + process.env.PORT || 3000)
     })
   })
