@@ -27,7 +27,7 @@ export const getSignUp = (req, res) => {
 }
 
 export const postSignIn = async (req, res, next) => {
-  const email = req.body.login
+  const email = req.body.email
   const password = req.body.password
 
   const errors = getErrorMessages(req)
