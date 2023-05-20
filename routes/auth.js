@@ -23,6 +23,8 @@ router.post('/signIn',
   ],
   authController.postSignIn)
 
+router.post('/signInWithGoogle', isAuth, authController.signInWithGoogle)
+
 router.post('/signUp',
   [
     body('name')

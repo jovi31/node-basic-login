@@ -56,6 +56,10 @@ export const postSignIn = async (req, res, next) => {
   }
 }
 
+export const signInWithGoogle = async (req, res, next) => {
+  
+}
+
 export const postSignUp = async (req, res, next) => {
   const password = req.body.password
   const name = req.body.name
