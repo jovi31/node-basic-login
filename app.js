@@ -76,7 +76,7 @@ app.use((err, req, res) => {
   })
 })
 
-sequelize.sync()
+sequelize.sync({ force: true })
   .then(() => {
     app.listen(process.env.PORT, () => {
       console.log('Server listen on port ' + process.env.PORT || 3000)
