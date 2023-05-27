@@ -24,11 +24,8 @@ router.post('/signIn',
   ],
   authController.postSignIn)
 
-router.post('/signInWithGoogle', authController.signInWithGoogle)
-
 router.post('/signUp',
   [
-    authProvider,
     body('name')
       .notEmpty().withMessage('Name is required').bail()
       .isLength({ max: 200 }),

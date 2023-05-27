@@ -43,12 +43,18 @@ export const postSignIn = async (req, res, next) => {
     const user = await User.findOne({ where: { email } })
     const sessionSave = promisify(req.session.save.bind(req.session))
 
+    if (user && user.authProvider !== 'local') {
+      req.flash('errors', { nonFieldError: 'Invalid login option' })
+      await sessionSave()
+      return res.redirect('/signIn')
+    }
+
     if (user && await bcrypt.compare(password, user.password)) {
       req.session.userId = user.id
       await sessionSave()
       res.redirect('/')
     } else {
-      req.flash('errors', { nonFieldError: 'Invalid Login or password' })
+      req.flash('errors', { nonFieldError: 'Invalid login or password' })
       await sessionSave()
       res.redirect('/signIn')
     }

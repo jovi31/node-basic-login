@@ -12,6 +12,7 @@ import homeRoutes from './routes/home.js'
 import authRoutes from './routes/auth.js'
 import errorController from './controllers/error.js'
 import User from './models/User.js'
+import { signInWithGoogle } from './controllers/auth.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -29,6 +30,9 @@ app.use(session({
   saveUninitialized: false,
   store: sessionStore(sequelize)
 }))
+
+app.post('/signInWithGoogle', signInWithGoogle)
+
 app.use(csrfProtection())
 app.use(flash())
 
