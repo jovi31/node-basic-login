@@ -1,5 +1,6 @@
 import { promisify } from 'util'
 import bcrypt from 'bcryptjs'
+import { OAuth2Client } from 'google-auth-library'
 
 import User from '../models/User.js'
 import { getErrorMessages } from '../utils/error.js'
@@ -56,8 +57,42 @@ export const postSignIn = async (req, res, next) => {
   }
 }
 
+const verifyIdToken = async (token) => {
+  const clientId = process.env.CLIENT_ID
+  const client = new OAuth2Client(clientId)
+  const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: clientId
+  })
+  return ticket.getPayload()
+}
+
 export const signInWithGoogle = async (req, res, next) => {
-  
+  const sessionSave = promisify(req.session.save.bind(req.session))
+  const token = req.body.credential
+  try {
+    const { iss, email, name } = await verifyIdToken(token)
+    let user = await User.findOne({ where: { email } })
+
+    if (user && user.authProvider !== iss) {
+      req.flash('errors', { nonFieldError: 'Google sign in failed: This account already exists' })
+      await sessionSave()
+      return res.redirect('/signIn')
+    }
+
+    if (!user) {
+      user = await User.create({ email, name, authProvider: iss })
+    }
+
+    req.session.userId = user.id
+    await sessionSave()
+    return res.redirect('/')
+
+  } catch (error) {
+    req.flash('errors', { nonFieldError: 'Google sign in failed!' })
+    await sessionSave()
+    res.redirect('/signIn')
+  }
 }
 
 export const postSignUp = async (req, res, next) => {
@@ -94,5 +129,5 @@ export const postLogout = async (req, res, next) => {
 }
 
 export default {
-  getSignIn, getSignUp, postSignIn, postSignUp, postLogout,
+  getSignIn, getSignUp, postSignIn, signInWithGoogle, postSignUp, postLogout,
 }

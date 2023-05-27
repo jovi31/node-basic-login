@@ -4,6 +4,7 @@ import validator from 'express-validator'
 import User from '../models/User.js'
 import authController from '../controllers/auth.js'
 import isAuth from '../middlewares/isAuth.js'
+import authProvider from '../middlewares/authProvider.js'
 import { noSpaces } from '../utils/validation.js'
 
 const { body } = validator
@@ -23,10 +24,11 @@ router.post('/signIn',
   ],
   authController.postSignIn)
 
-router.post('/signInWithGoogle', isAuth, authController.signInWithGoogle)
+router.post('/signInWithGoogle', authController.signInWithGoogle)
 
 router.post('/signUp',
   [
+    authProvider,
     body('name')
       .notEmpty().withMessage('Name is required').bail()
       .isLength({ max: 200 }),

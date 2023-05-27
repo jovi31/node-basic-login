@@ -13,7 +13,7 @@ const User = sequelize.define('user', {
   },
   password: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: true
   },
   name: {
     type: DataTypes.STRING,
@@ -24,7 +24,12 @@ const User = sequelize.define('user', {
     allowNull: false,
     unique: true
   },
-  imgUrl: DataTypes.STRING
+  imgUrl: DataTypes.STRING,
+  authProvider: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    defaultValue: 'local'
+  },
 }, { timestamps: false })
 
 Session.belongsTo(User)
