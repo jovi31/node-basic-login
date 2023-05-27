@@ -30,11 +30,11 @@ app.use(session({
   saveUninitialized: false,
   store: sessionStore(sequelize)
 }))
+app.use(flash())
 
 app.post('/signInWithGoogle', signInWithGoogle)
 
 app.use(csrfProtection())
-app.use(flash())
 
 app.use(async (req, res, next) => {
   const userId = req.session.userId
