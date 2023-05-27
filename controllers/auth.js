@@ -44,7 +44,7 @@ export const postSignIn = async (req, res, next) => {
     const sessionSave = promisify(req.session.save.bind(req.session))
 
     if (user && user.authProvider !== 'local') {
-      req.flash('errors', { nonFieldError: 'Invalid login option' })
+      req.flash('errors', { nonFieldErrors: ['Invalid login option'] })
       await sessionSave()
       return res.redirect('/signIn')
     }
@@ -54,7 +54,7 @@ export const postSignIn = async (req, res, next) => {
       await sessionSave()
       res.redirect('/')
     } else {
-      req.flash('errors', { nonFieldError: 'Invalid login or password' })
+      req.flash('errors', { nonFieldErrors: ['Invalid login or password', 'teste'] })
       await sessionSave()
       res.redirect('/signIn')
     }
@@ -81,7 +81,7 @@ export const signInWithGoogle = async (req, res, next) => {
     let user = await User.findOne({ where: { email } })
 
     if (user && user.authProvider !== iss) {
-      req.flash('errors', { nonFieldError: 'Google sign in failed: This account already exists' })
+      req.flash('errors', { nonFieldErrors: ['Google sign in failed: This account already exists'] })
       await sessionSave()
       return res.redirect('/signIn')
     }
@@ -95,7 +95,7 @@ export const signInWithGoogle = async (req, res, next) => {
     return res.redirect('/')
 
   } catch (error) {
-    req.flash('errors', { nonFieldError: 'Google sign in failed!' })
+    req.flash('errors', { nonFieldErrors: ['Google sign in failed!']})
     await sessionSave()
     res.redirect('/signIn')
   }
